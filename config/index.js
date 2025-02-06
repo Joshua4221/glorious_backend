@@ -1,0 +1,17 @@
+import dotenv from 'dotenv';
+dotenv.config();
+
+export const configs = {
+  PORT: process.env.PORT,
+  DB_URL: process.env.MONGODB_URI,
+  JWT_SECRET: process.env.JWT_SECRET,
+  APP_PASSWORD: process.env.APP_PASSWORD,
+  USER_EMAIL: process.env.USER_EMAIL,
+  MONGODB_URI_WHATSAPP: process.env.MONGODB_URI_WHATSAPP,
+  PAYSTACK_SECRET_KEY: process.env.PAYSTACK_SECRET_KEY,
+  PAYSTACK_API_URL: process.env.PAYSTACK_API_URL,
+  FLUTTER_WAVE_SECRET_KEY: process.env.FLUTTER_WAVE_SECRET_KEY,
+  FLUTTER_WAVE_PUBLIC_KEY: process.env.FLUTTER_WAVE_PUBLIC_KEY,
+  FLUTTER_WAVE_ENCRYPTION_KEY: process.env.FLUTTER_WAVE_ENCRYPTION_KEY,
+  FLUTTER_WAVE_BASE_URL: process.env.FLUTTER_WAVE_BASE_URL,
+};
