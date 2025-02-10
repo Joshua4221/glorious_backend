@@ -187,8 +187,8 @@ export const UserProductApiProvider = (app) => {
         let { name, category, from, to, page, limit } = await req.params;
 
         // Normalize empty string parameters
-        name = name === '""' || !name ? '' : name;
-        category = category === '""' || !category ? '' : category;
+        if (name === '""' || name === "''" || !name) name = '';
+        if (category === '""' || category === "''" || !category) category = '';
 
         const product = await productService.SearchProductByCategory(
           name,
