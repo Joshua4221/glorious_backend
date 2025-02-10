@@ -181,14 +181,16 @@ export const UserProductApiProvider = (app) => {
   );
 
   app.get(
-    '/api/v1/search_for_product_by_category/:category/:page/:limit',
+    '/api/v1/search_for_product_by_category/:category/:from/:to/:page/:limit',
     authenticateUser,
     async (req, res, next) => {
       try {
-        const { category, page, limit } = await req.params;
+        const { category, from, to, page, limit } = await req.params;
 
         const product = await productService.SearchProductByCategory(
           category,
+          Number(from),
+          Number(to),
           page,
           limit
         );

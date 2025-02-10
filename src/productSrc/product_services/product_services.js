@@ -21,14 +21,27 @@ export default class ProductController {
     }
   }
 
-  async SearchProductByCategory(payload, page, limit) {
+  async SearchProductByCategory(payload, minPrice, maxPrice, page, limit) {
     try {
-      const searchproduct = await ProductModel.paginate(
-        {
-          category: { $regex: payload, $options: 'i' },
-        },
-        { ...options, page: page, limit: limit }
-      );
+      let query = {};
+
+      // If category is provided, add it to the query
+      if (payload) {
+        query.category = { $regex: payload, $options: 'i' };
+      }
+
+      // If minPrice or maxPrice is provided, add price range to the query
+      if (minPrice !== undefined || maxPrice !== undefined) {
+        query.price = {};
+        if (minPrice !== undefined) query.price.$gte = minPrice;
+        if (maxPrice !== undefined) query.price.$lte = maxPrice;
+      }
+
+      const searchproduct = await ProductModel.paginate(query, {
+        ...options,
+        page: page,
+        limit: limit,
+      });
 
       return searchproduct;
     } catch (err) {
