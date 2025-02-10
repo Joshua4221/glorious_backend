@@ -21,13 +21,25 @@ export default class ProductController {
     }
   }
 
-  async SearchProductByCategory(payload, minPrice, maxPrice, page, limit) {
+  async SearchProductByCategory(
+    name,
+    payload,
+    minPrice,
+    maxPrice,
+    page,
+    limit
+  ) {
     try {
       let query = {};
 
       // If category is provided, add it to the query
       if (payload) {
         query.category = { $regex: payload, $options: 'i' };
+      }
+
+      // If category is provided, add it to the query
+      if (name) {
+        query.product_name = { $regex: name, $options: 'i' };
       }
 
       // If minPrice or maxPrice is provided, add price range to the query
