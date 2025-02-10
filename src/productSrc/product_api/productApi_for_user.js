@@ -182,10 +182,13 @@ export const UserProductApiProvider = (app) => {
 
   app.get(
     '/api/v1/search_for_product_by_category/:name/:category/:from/:to/:page/:limit',
-    authenticateUser,
     async (req, res, next) => {
       try {
-        const { name, category, from, to, page, limit } = await req.params;
+        let { name, category, from, to, page, limit } = await req.params;
+
+        // Normalize empty string parameters
+        name = name === '""' || !name ? '' : name;
+        category = category === '""' || !category ? '' : category;
 
         const product = await productService.SearchProductByCategory(
           name,

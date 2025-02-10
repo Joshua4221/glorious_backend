@@ -32,8 +32,10 @@ export default class ProductController {
     try {
       let query = {};
 
+      console.log(payload, payload.length, name, 'season of work');
+
       // If category is provided, add it to the query
-      if (payload) {
+      if (payload !== '' && payload) {
         query.category = { $regex: payload, $options: 'i' };
       }
 
@@ -43,11 +45,17 @@ export default class ProductController {
       }
 
       // If minPrice or maxPrice is provided, add price range to the query
-      if (minPrice !== undefined || maxPrice !== undefined) {
+      if (
+        (minPrice !== undefined || maxPrice !== undefined) &&
+        minPrice > 0 &&
+        maxPrice > 0
+      ) {
         query.price = {};
         if (minPrice !== undefined) query.price.$gte = minPrice;
         if (maxPrice !== undefined) query.price.$lte = maxPrice;
       }
+
+      console.log(query, 'season');
 
       const searchproduct = await ProductModel.paginate(query, {
         ...options,
