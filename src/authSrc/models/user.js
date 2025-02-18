@@ -41,37 +41,11 @@ const UserSchema = new mongoose.Schema(
       minLength: 6,
     },
 
-    store_name: {
-      type: String,
-      // unique: true,
-    },
-
-    store_description: {
-      type: String,
-      // unique: true,
-    },
-
     profile_pic: {
       type: String,
     },
 
     cloudinary_id: {
-      type: String,
-    },
-
-    vendor_type: {
-      type: Boolean,
-      default: false,
-    },
-
-    client_type: {
-      type: Boolean,
-      default: false,
-    },
-
-    business_name: { type: String },
-
-    business_address: {
       type: String,
     },
 
@@ -89,52 +63,9 @@ const UserSchema = new mongoose.Schema(
 
     date: { type: Date, default: Date.now },
 
-    business_type: {
-      type: String,
-      // Sole proprietorship, partnership, corporation, etc.
-    },
-
-    tax_identification_number: {
-      type: String,
-      // Tax Identification Number (TIN): For tax purposes, depending on your country.
-    },
-
-    government_id_type: {
-      type: String,
-      // Government ID: A copy of your driver's license, passport, or other government-issued ID.
-    },
-
-    government_id_number: {
-      type: String,
-      // Government ID: A copy of your driver's license, passport, or other government-issued ID.
-    },
-
-    business_license: {
-      type: String,
-      // Business License: Proof of your business registration.
-    },
-
     usedroom: {
       type: String,
     },
-
-    imageVerification: {
-      type: String,
-    },
-
-    verify_phone: { type: String, default: 'pending' },
-
-    verify_email: { type: String, default: 'pending' },
-
-    face_verification: { type: String, default: 'pending' },
-
-    verify_document: { type: String, default: 'pending' },
-
-    verify_business: { type: String, default: 'pending' },
-
-    otp: { type: String },
-
-    phone_otp: { type: String },
   },
   { timestamps: true }
 );

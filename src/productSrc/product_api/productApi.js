@@ -63,9 +63,7 @@ export const ProductApiProvider = (app) => {
         const service = await productService.getProduct(page, limit);
 
         // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: service });
+        res.status(StatusCodes.OK).send({ message: 'success', data: service });
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -86,9 +84,7 @@ export const ProductApiProvider = (app) => {
         const service = await productService.getProductById(page, limit, id);
 
         // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: service });
+        res.status(StatusCodes.OK).send({ message: 'success', data: service });
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -123,9 +119,7 @@ export const ProductApiProvider = (app) => {
         }
 
         // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: product });
+        res.status(StatusCodes.OK).send({ message: 'success', data: product });
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -161,7 +155,7 @@ export const ProductApiProvider = (app) => {
         );
 
         res
-          .status(StatusCodes.CREATED)
+          .status(StatusCodes.OK)
           .send({ message: 'success', data: product_state });
       } catch (error) {
         // Handle errors

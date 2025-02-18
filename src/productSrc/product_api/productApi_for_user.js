@@ -1,58 +1,10 @@
 import { StatusCodes } from 'http-status-codes';
-import { adminAuthenticateUser } from '../../../utils/adminAuthentication.js';
 import ProductModel from '../models/product_models.js';
 import ProductController from '../product_services/product_services.js';
 import { authenticateUser } from '../../../utils/authentication.js';
 
 export const UserProductApiProvider = (app) => {
   const productService = new ProductController();
-
-  app.post(
-    '/api/v1/user_create_product',
-    authenticateUser,
-    async (req, res, next) => {
-      try {
-        const user = req.user;
-
-        // Check if required fields are provided
-        if (!req.body.product_name) {
-          return res.status(StatusCodes.BAD_REQUEST).send({
-            message: 'Please provide Product name',
-          });
-        }
-
-        // Check if email or phone number already exists
-        const productDetails = await ProductModel.findOne({
-          name: req.body.name,
-        });
-
-        if (productDetails) {
-          return res.status(StatusCodes.BAD_REQUEST).send({
-            message: 'Product with name already exist',
-          });
-        }
-
-        // Create user and generate OTP
-        const category = await productService.CreateProduct({
-          ...req.body,
-          email: user?.email,
-          name: user?.name,
-          phone_number: user?.phone_number,
-          createdBy: user?.userId,
-        });
-
-        // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: category });
-      } catch (err) {
-        // Handle errors
-        res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: err.message });
-      }
-    }
-  );
 
   app.get(
     '/api/v1/user_get_all_product/:page/:limit',
@@ -63,9 +15,7 @@ export const UserProductApiProvider = (app) => {
         const service = await productService.getProduct(page, limit);
 
         // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: service });
+        res.status(StatusCodes.OK).send({ message: 'success', data: service });
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -81,17 +31,9 @@ export const UserProductApiProvider = (app) => {
       try {
         const { Id } = await req.params;
 
-        console.log(
-          Id,
-          Id.split('@')[Id.split('@').length - 1],
-          'season of work'
-        );
-
         const product = await productService.SingleProduct({
           _id: Id.split('@')[Id.split('@').length - 1],
         });
-
-        console.log(product, 'nothing');
 
         if (!product) {
           return res.status(StatusCodes.UNAUTHORIZED).send({
@@ -100,9 +42,7 @@ export const UserProductApiProvider = (app) => {
         }
 
         // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: product });
+        res.status(StatusCodes.OK).send({ message: 'success', data: product });
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -138,7 +78,7 @@ export const UserProductApiProvider = (app) => {
         );
 
         res
-          .status(StatusCodes.CREATED)
+          .status(StatusCodes.OK)
           .send({ message: 'success', data: product_state });
       } catch (error) {
         // Handle errors

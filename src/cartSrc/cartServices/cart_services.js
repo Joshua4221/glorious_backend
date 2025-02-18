@@ -33,6 +33,18 @@ export default class CartController {
     }
   }
 
+  async SingleCartByUser(payload) {
+    try {
+      const cart = await CartModel.findOne({
+        createdBy: payload.user,
+      }).lean();
+
+      return cart;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async SingleCartDetails(payload) {
     try {
       const cart = await CartModel.findOne({
@@ -45,12 +57,9 @@ export default class CartController {
     }
   }
 
-  async getCart(page, limit) {
+  async getCart(userId) {
     try {
-      const cart = await CartModel.paginate(
-        {},
-        { ...options, page: page, limit: limit }
-      );
+      const cart = await CartModel.findOne({ createdBy: userId }).lean();
 
       return cart;
     } catch (err) {
