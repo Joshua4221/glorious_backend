@@ -15,14 +15,12 @@ const ProductSchema = new mongoose.Schema({
   product_name: {
     type: String,
   },
-  quantity: { type: Number, required: true, min: 1 },
   price: { type: String, required: true },
-  totalPrice: { type: String, default: 0 },
   symbol: { type: String },
   gallery: [GallerySchema],
 });
 
-const CartSchema = new mongoose.Schema(
+const WishListSchema = new mongoose.Schema(
   {
     createdBy: {
       type: mongoose.Types.ObjectId,
@@ -48,16 +46,14 @@ const CartSchema = new mongoose.Schema(
 
     symbol: { type: String },
 
-    total_quantity: { type: Number, required: true, min: 1 },
-
     totalPrice: { type: String, default: 0 },
   },
   { timestamps: true }
 );
 
-CartSchema.plugin(mongoosePaginate);
+WishListSchema.plugin(mongoosePaginate);
 
 // Create the CartModel using the defined schema
-const CartModel = mongoose.model('cart', CartSchema);
+const WishListModel = mongoose.model('wish_list', WishListSchema);
 
-export default CartModel;
+export default WishListModel;

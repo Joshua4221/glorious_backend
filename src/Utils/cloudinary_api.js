@@ -77,7 +77,7 @@ export const CloudinaryApiProvider = (app) => {
 
           const data = await UploadThroughCloudinary(base64Image);
 
-          res.status(StatusCodes.OK).json({ message: 'success', data: data });
+          res.status(StatusCodes.OK).json({ message: 'success', data: [data] });
         }
       } catch (error) {
         res

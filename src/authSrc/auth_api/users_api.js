@@ -13,7 +13,7 @@ export const userApiProvider = (app) => {
       const user = req.user;
 
       // Return user data as JSON in the response
-      res.status(StatusCodes.OK).json({ data: user, message: 'Success' });
+      res.status(StatusCodes.OK).json({ data: user, message: 'success' });
     } catch (err) {
       // Handle errors and send an internal server error response
       res

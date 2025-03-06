@@ -24,6 +24,11 @@ import { SubCategoryApiProvider } from './src/categoriesSrc/category_api/subCate
 import { ProductApiProvider } from './src/productSrc/product_api/productApi.js';
 import { UserProductApiProvider } from './src/productSrc/product_api/productApi_for_user.js';
 import { CartApiProvider } from './src/cartSrc/cartApi/cart_api.js';
+import { SocketApiProvider } from './src/SocketSrc/socketApi/socket_api.js';
+import cloudinary from './config/cloudinary.js';
+import { OrderApiProvider } from './src/orderSrc/orderApi/order_api.js';
+import { blogApiConnections } from './src/blogSrc/api/blog_api.js';
+import { WishListApiProvider } from './src/wishListSrc/wishListApis/wish_list_api.js';
 
 export const expressApp = async (app) => {
   app.use(express.json({ limit: '50mb' }));
@@ -33,7 +38,12 @@ export const expressApp = async (app) => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(fileUpload());
 
-  // await whatsappClient.initialize();
+  cloudinary.config({
+    cloud_name: process.env.CLOUD_NAME,
+    api_key: process.env.CLOUD_API_KEY,
+    api_secret: process.env.CLOUD_API_SECRET,
+    secure: true,
+  });
 
   authApiProvider(app);
   userApiProvider(app);
@@ -54,6 +64,10 @@ export const expressApp = async (app) => {
   ProductApiProvider(app);
   UserProductApiProvider(app);
   CartApiProvider(app);
+  OrderApiProvider(app);
+  SocketApiProvider(app);
+  blogApiConnections(app);
+  WishListApiProvider(app);
 
   app.use(notFound);
 

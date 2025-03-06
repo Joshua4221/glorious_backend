@@ -22,7 +22,7 @@ const ProductSchema = new mongoose.Schema({
   gallery: [GallerySchema],
 });
 
-const CartSchema = new mongoose.Schema(
+const OrderSchema = new mongoose.Schema(
   {
     createdBy: {
       type: mongoose.Types.ObjectId,
@@ -48,16 +48,32 @@ const CartSchema = new mongoose.Schema(
 
     symbol: { type: String },
 
-    total_quantity: { type: Number, required: true, min: 1 },
+    client_notification: { type: Number, default: 0 },
+
+    admin_notification: { type: Number, default: 0 },
 
     totalPrice: { type: String, default: 0 },
+
+    total_quantity: { type: Number, required: true, min: 1 },
+
+    status: {
+      type: String,
+      enum: ['pending', 'processing', 'shipping', 'delivered', 'cancelled'],
+      default: 'pending',
+    },
+
+    payment_status: {
+      type: String,
+      enum: ['unpaid', 'paid'],
+      default: 'unpaid',
+    },
   },
   { timestamps: true }
 );
 
-CartSchema.plugin(mongoosePaginate);
+OrderSchema.plugin(mongoosePaginate);
 
 // Create the CartModel using the defined schema
-const CartModel = mongoose.model('cart', CartSchema);
+const OrderModel = mongoose.model('order', OrderSchema);
 
-export default CartModel;
+export default OrderModel;

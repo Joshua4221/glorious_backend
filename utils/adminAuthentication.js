@@ -1,18 +1,18 @@
-import jwt from "jsonwebtoken";
+import jwt from 'jsonwebtoken';
 // const { UnauthenticatedError } = require("../errors");
-import { StatusCodes } from "http-status-codes";
-import AdminModel from "../src/adminSrc/admin_models/admin_models.js";
+import { StatusCodes } from 'http-status-codes';
+import AdminModel from '../src/adminSrc/admin_models/admin_models.js';
 
 export const adminAuthenticateUser = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res
       .status(StatusCodes.UNAUTHORIZED)
-      .json({ message: "please login or create and account" });
+      .json({ message: 'please login or create and account' });
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authHeader.split(' ')[1];
 
   try {
     const payload = jwt.verify(token, process.env.JWT_SECRET);
@@ -21,7 +21,7 @@ export const adminAuthenticateUser = async (req, res, next) => {
 
     if (!user) {
       return res.status(StatusCodes.UNAUTHORIZED).json({
-        message: "Please Login or User does not exist or create and account",
+        message: 'Please Login or User does not exist or create and account',
       });
     }
 

@@ -3,9 +3,12 @@ import { authenticateUser } from '../../../utils/authentication.js';
 import CartController from '../cartServices/cart_services.js';
 import ProductModel from '../../productSrc/models/product_models.js';
 import CartModel from '../cartModel/cart_model.js';
+import OrderController from '../../orderSrc/orderServices/order_services.js';
 
 export const CartApiProvider = (app) => {
   const cartService = new CartController();
+
+  const orderService = new OrderController();
 
   app.post('/api/v1/create_cart', authenticateUser, async (req, res, next) => {
     try {
@@ -35,23 +38,30 @@ export const CartApiProvider = (app) => {
 
       if (!cart) {
         const cartDetails = await cartService.CreateCart({
-          totalPrice: Number(productDetails.price),
-          totalDiscount: Number(productDetails.discount),
+          totalPrice:
+            Number(productDetails.price) > Number(productDetails.discount)
+              ? Number(productDetails.discount)
+              : Number(productDetails.price),
           email: user?.email,
           name: user?.name,
           phone_number: user?.phone_number,
           createdBy: user?.userId,
           symbol: productDetails?.symbol,
+          total_quantity: 1,
           products: [
             {
               product: productId,
               product_name: productDetails?.product_name,
               quantity: 1,
-              price: Number(productDetails.price),
-              discount: Number(productDetails.discount),
+              price:
+                Number(productDetails.price) > Number(productDetails.discount)
+                  ? Number(productDetails.discount)
+                  : Number(productDetails.price),
               gallery: productDetails?.gallery,
-              totalPrice: Number(productDetails.price),
-              totalDiscount: Number(productDetails.discount),
+              totalPrice:
+                Number(productDetails.price) > Number(productDetails.discount)
+                  ? Number(productDetails.discount)
+                  : Number(productDetails.price),
               symbol: productDetails?.symbol,
             },
           ],
@@ -73,21 +83,26 @@ export const CartApiProvider = (app) => {
 
         cart.products[itemIndex].totalPrice =
           cart.products[itemIndex].quantity *
-          Number(cart.products[itemIndex].price);
-
-        cart.products[itemIndex].totalDiscount =
-          cart.products[itemIndex].quantity *
-          Number(cart.products[itemIndex].discount);
+          (Number(cart.products[itemIndex].price) >
+          Number(cart.products[itemIndex].discount)
+            ? Number(cart.products[itemIndex].discount)
+            : Number(cart.products[itemIndex].price));
       } else {
         // Add new item
         cart.products.push({
           product: productId,
           product_name: productDetails?.product_name,
           quantity: quantity,
-          price: Number(productDetails.price),
-          discount: Number(productDetails.discount),
-          totalPrice: quantity * Number(productDetails.price),
-          totalDiscount: quantity * Number(productDetails.discount),
+          price:
+            Number(productDetails.price) > Number(productDetails.discount)
+              ? Number(productDetails.discount)
+              : Number(productDetails.price),
+
+          totalPrice:
+            quantity *
+            (Number(productDetails.price) > Number(productDetails.discount)
+              ? Number(productDetails.discount)
+              : Number(productDetails.price)),
           gallery: productDetails?.gallery,
           symbol: productDetails?.symbol,
         });
@@ -97,13 +112,18 @@ export const CartApiProvider = (app) => {
 
       // Recalculate total price
       cart.totalPrice = cart.products.reduce(
-        (acc, item) => acc + item.quantity * Number(item.price),
+        (acc, item) =>
+          acc +
+          item.quantity *
+            (Number(item.price) > Number(item.discount)
+              ? Number(item.discount)
+              : Number(item.price)),
         0
       );
 
-      // Recalculate total discount
-      cart.totalDiscount = cart.products.reduce(
-        (acc, item) => acc + item.quantity * Number(item.discount),
+      // Recalculate total quantity
+      cart.total_quantity = cart.products.reduce(
+        (acc, item) => acc + item.quantity,
         0
       );
 
@@ -244,6 +264,47 @@ export const CartApiProvider = (app) => {
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({ message: err.message });
+    }
+  });
+
+  app.post('/api/v1/checkout', authenticateUser, async (req, res) => {
+    try {
+      const cartId = req.body.id;
+      const { userId } = req.user;
+
+      const cart = await CartModel.findOne({
+        _id: cartId,
+      }).lean();
+
+      if (!cart) {
+        return res.status(StatusCodes.UNAUTHORIZED).send({
+          message: 'cart does not exists',
+        });
+      }
+
+      const status_order = await orderService.getUserOrderDueToStatus(userId);
+
+      console.log(cart, 'usering grounding');
+
+      if (status_order) {
+        return res.status(StatusCodes.UNAUTHORIZED).send({
+          message:
+            'You already have an active order. Please cancel it before placing a new one.',
+        });
+      }
+
+      // Move cart items to Order collection
+      const order = await orderService.CreateOrder({
+        ...cart,
+        chat_notification: 1,
+        admin_notification: 0,
+      });
+
+      await cartService.deleteCart(cartId);
+
+      res.status(200).json({ message: 'success', data: order });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
   });
 };
