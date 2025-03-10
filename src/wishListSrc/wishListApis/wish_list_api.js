@@ -14,7 +14,7 @@ export const WishListApiProvider = (app) => {
       try {
         const user = req.user;
 
-        const { productId } = req.body;
+        const { productId, quantity } = req.body;
 
         // Check if required fields are provided
         if (!productId) {
@@ -95,7 +95,7 @@ export const WishListApiProvider = (app) => {
         }
 
         // Recalculate total price
-        wish_list.totalPrice = cart.products.reduce(
+        wish_list.totalPrice = wish_list.products.reduce(
           (acc, item) =>
             acc +
             (Number(item.price) > Number(item.discount)
