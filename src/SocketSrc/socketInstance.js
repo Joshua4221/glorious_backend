@@ -126,6 +126,14 @@ export function createSocketServer(httpServer) {
       );
     });
 
+    socket.on('update_payment_state', async (status, room) => {
+      await socketServiceChatController.UpdatePaymentState(
+        status,
+        room,
+        socket
+      );
+    });
+
     // this is to create room
     socket.on('create-customer-user', async (details) => {
       await customerSocketServiceChatController.Create_Customer_Room(details);

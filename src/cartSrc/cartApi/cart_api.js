@@ -4,6 +4,7 @@ import CartController from '../cartServices/cart_services.js';
 import ProductModel from '../../productSrc/models/product_models.js';
 import CartModel from '../cartModel/cart_model.js';
 import OrderController from '../../orderSrc/orderServices/order_services.js';
+import { sendOrderEmail } from '../../../utils/sendingEmailOrder.js';
 
 export const CartApiProvider = (app) => {
   const cartService = new CartController();
@@ -284,8 +285,6 @@ export const CartApiProvider = (app) => {
 
       const status_order = await orderService.getUserOrderDueToStatus(userId);
 
-      console.log(cart, 'usering grounding');
-
       if (status_order) {
         return res.status(StatusCodes.UNAUTHORIZED).send({
           message:
@@ -301,6 +300,8 @@ export const CartApiProvider = (app) => {
       });
 
       await cartService.deleteCart(cartId);
+
+      await sendOrderEmail(order);
 
       res.status(200).json({ message: 'success', data: order });
     } catch (error) {

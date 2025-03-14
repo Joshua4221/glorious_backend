@@ -1,13 +1,46 @@
 import { GenerateOpt } from '../../../utils/otp_generator.js';
 import UserModel from '../models/user.js';
 
+const options = {
+  page: 1,
+  limit: 2,
+  lean: true,
+  select: '-password',
+  collation: {
+    locale: 'en',
+  },
+};
+
 export default class UserService {
   async getAUser(payload) {
     try {
-      const user = await UserModel.findOne({ _id: payload?.userId });
+      const user = await UserModel.findOne({ _id: payload?.userId }).lean();
 
       return user;
     } catch (err) {
+      throw err;
+    }
+  }
+
+  async getAllUser(page, limit) {
+    try {
+      const user = await UserModel.paginate(
+        {},
+        { ...options, page: page, limit: limit }
+      );
+
+      return user;
+    } catch (error) {
+      throw err;
+    }
+  }
+
+  async getAllUserCount() {
+    try {
+      const usersCount = await UserModel.find().countDocuments();
+
+      return usersCount;
+    } catch (error) {
       throw err;
     }
   }
@@ -45,6 +78,16 @@ export default class UserService {
       }).select('-password');
 
       return createUser;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async getAllUserCount() {
+    try {
+      const user = await UserModel.find().countDocuments();
+
+      return user;
     } catch (err) {
       throw err;
     }

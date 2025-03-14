@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import { authenticateUser } from '../../../utils/authentication.js';
 import UserService from '../services/user_services.js';
+import bcrypt from 'bcrypt';
 
 // API endpoint for getting user information
 export const userApiProvider = (app) => {
@@ -14,6 +15,56 @@ export const userApiProvider = (app) => {
 
       // Return user data as JSON in the response
       res.status(StatusCodes.OK).json({ data: user, message: 'success' });
+    } catch (err) {
+      // Handle errors and send an internal server error response
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: err.message });
+    }
+  });
+
+  app.get('/api/v1/get_all_users/:page/:limit', async (req, res, next) => {
+    try {
+      const { page, limit } = req.params;
+
+      const users = await userService.getAllUser(page, limit);
+
+      const getCount = await userService.getAllUserCount();
+
+      // Return user data as JSON in the response
+      res
+        .status(StatusCodes.OK)
+        .json({ data: users, count: getCount, message: 'success' });
+    } catch (err) {
+      // Handle errors and send an internal server error response
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: err.message });
+    }
+  });
+
+  app.get('/api/v1/get_total_users', async (req, res, next) => {
+    try {
+      const getCount = await userService.getAllUserCount();
+
+      // Return user data as JSON in the response
+      res.status(StatusCodes.OK).json({ data: getCount, message: 'success' });
+    } catch (err) {
+      // Handle errors and send an internal server error response
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: err.message });
+    }
+  });
+
+  app.get('/api/v1/get_single_users/:id', async (req, res, next) => {
+    try {
+      const userId = req.params.id;
+
+      const getCount = await userService.getAUser({ userId });
+
+      // Return user data as JSON in the response
+      res.status(StatusCodes.OK).json({ data: getCount, message: 'success' });
     } catch (err) {
       // Handle errors and send an internal server error response
       res
@@ -66,13 +117,7 @@ export const userApiProvider = (app) => {
 
   app.patch('/api/v1/edit_user', authenticateUser, async (req, res, next) => {
     try {
-      if (req?.user?.status === 'inactive') {
-        return res.status(StatusCodes.UNAUTHORIZED).json({
-          message: 'Becuase of you ADMIN Status you can not create a user.',
-        });
-      }
-
-      const userId = req.body._id ? req.body._id : req.user.userId;
+      const { userId } = req.user;
 
       const user = await userService.getAUser({ userId: userId });
 
@@ -80,12 +125,6 @@ export const userApiProvider = (app) => {
         return res
           .status(StatusCodes.BAD_REQUEST)
           .json({ message: `user does not exit` });
-      }
-
-      if (user?.admintype === 'root_admin') {
-        return res.status(StatusCodes.UNAUTHORIZED).json({
-          message: `This user Cans't be Edited`,
-        });
       }
 
       if (req.body.password) {
@@ -102,8 +141,8 @@ export const userApiProvider = (app) => {
           .json({ data: editedDetials, message: `success` });
       } else {
         const editedDetials = await userService.editUserData(userId, {
-          ...req.body,
           ...user,
+          ...req.body,
         });
 
         res
@@ -122,7 +161,7 @@ export const userApiProvider = (app) => {
     authenticateUser,
     async (req, res, next) => {
       try {
-        const userId = await req.user;
+        const { userId } = await req.user;
 
         if (req?.user?.status === 'inactive') {
           return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -144,7 +183,7 @@ export const userApiProvider = (app) => {
         const salt = await bcrypt.genSalt(10);
         const myNewPassword = await bcrypt.hash(req?.body?.newPassword, salt);
 
-        const editedDetials = await userService.editUserData(userId.userId, {
+        const editedDetials = await userService.editUserData(userId, {
           ...req.user,
           password: myNewPassword,
         });
@@ -159,4 +198,18 @@ export const userApiProvider = (app) => {
       }
     }
   );
+
+  app.get('/api/v1/get_all_users_count', async (req, res, next) => {
+    try {
+      const getCount = await userService.getAllUserCount();
+
+      // Return user data as JSON in the response
+      res.status(StatusCodes.OK).json({ data: getCount, message: 'success' });
+    } catch (err) {
+      // Handle errors and send an internal server error response
+      res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: err.message });
+    }
+  });
 };

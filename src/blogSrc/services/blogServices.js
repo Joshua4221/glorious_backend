@@ -115,4 +115,14 @@ export default class BlogService {
       throw err;
     }
   }
+
+  async allBlogCount() {
+    try {
+      const getBlogCount = await ArticlesModel.find().countDocuments();
+
+      return getBlogCount;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

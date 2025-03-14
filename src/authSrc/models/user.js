@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import validator from 'validator';
+import mongoosePaginate from 'mongoose-paginate-v2';
 
 const { isEmail } = validator;
 
@@ -69,6 +70,8 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+UserSchema.plugin(mongoosePaginate);
 
 // Middleware to be executed before saving a user document
 UserSchema.pre('save', function (next) {

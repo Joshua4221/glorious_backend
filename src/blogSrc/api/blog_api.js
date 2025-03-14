@@ -173,4 +173,16 @@ export const blogApiConnections = (app) => {
         .json({ message: error.message });
     }
   });
+
+  app.get('/api/v1/get_all_blog_count', async (req, res, next) => {
+    try {
+      const allArticle = await blogService.allBlogCount();
+
+      res.status(StatusCodes.OK).json({ data: allArticle, message: 'success' });
+    } catch (error) {
+      return res
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
+        .json({ message: error.message });
+    }
+  });
 };

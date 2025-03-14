@@ -196,4 +196,21 @@ export const ProductApiProvider = (app) => {
       }
     }
   );
+
+  app.get(
+    '/api/v1/get_all_product_count',
+    adminAuthenticateUser,
+    async (req, res, next) => {
+      try {
+        const product = await productService.getAllProductCount();
+
+        // Return success response
+        res.status(StatusCodes.OK).send({ message: 'success', data: product });
+      } catch (error) {
+        res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: error.message });
+      }
+    }
+  );
 };

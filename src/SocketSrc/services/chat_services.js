@@ -263,9 +263,37 @@ export default class SocketChatServiceController {
       _id: room?.split('-')[0],
     });
 
+    // Prevent updating to "shipping" or "delivered" if payment_status is not "paid"
+    if (
+      ['shipping', 'delivered'].includes(status) &&
+      order.payment_status !== 'paid'
+    ) {
+      return;
+    }
+
     user.product_status = status;
 
     order.status = status;
+
+    await user.save();
+
+    await order.save();
+
+    const members = await Rooms.find().sort('-lastTime');
+
+    socketIO.to(room).emit('new-user', members);
+  }
+
+  async UpdatePaymentState(status, room, socket) {
+    const user = await Rooms.findOne({ room: room });
+
+    const order = await OrderModel.findOne({
+      _id: room?.split('-')[0],
+    });
+
+    user.payment_status = status;
+
+    order.payment_status = status;
 
     await user.save();
 

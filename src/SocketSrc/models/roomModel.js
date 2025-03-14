@@ -83,6 +83,12 @@ const RoomsSchema = new mongoose.Schema(
       default: 'pending',
     },
 
+    payment_status: {
+      type: String,
+      enum: ['unpaid', 'paid'],
+      default: 'unpaid',
+    },
+
     lastMessage: {
       type: String,
     },

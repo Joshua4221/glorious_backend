@@ -146,4 +146,14 @@ export default class ProductController {
       throw err;
     }
   }
+
+  async getAllProductCount() {
+    try {
+      const product = await ProductModel.find().countDocuments();
+
+      return product;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

@@ -44,6 +44,14 @@ const OrderSchema = new mongoose.Schema(
       type: String,
     },
 
+    address_one: {
+      type: String,
+    },
+
+    address_two: {
+      type: String,
+    },
+
     products: [ProductSchema],
 
     symbol: { type: String },
