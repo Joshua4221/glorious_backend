@@ -89,7 +89,7 @@ export function createSocketServer(httpServer) {
     socket.on('new-user', async () => {
       const members = await Rooms.find().sort('-lastTime');
 
-      io.emit('new-user', members);
+      io.emit('new-users', members);
     });
 
     socket.on('admin-join-room', async (room, previousRoom, roomDetails) => {
@@ -155,6 +155,12 @@ export function createSocketServer(httpServer) {
         );
       }
     );
+
+    socket.on('new-user', async () => {
+      const members = await Rooms.find().sort('-lastTime');
+
+      io.emit('normal-new-users', members);
+    });
 
     socket.on('my-customer-new-user', async (details) => {
       const members = await NormalRooms.find({

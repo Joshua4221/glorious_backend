@@ -47,6 +47,8 @@ export const userApiProvider = (app) => {
     try {
       const getCount = await userService.getAllUserCount();
 
+      console.log(getCount, 'season');
+
       // Return user data as JSON in the response
       res.status(StatusCodes.OK).json({ data: getCount, message: 'success' });
     } catch (err) {

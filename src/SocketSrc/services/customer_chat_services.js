@@ -47,7 +47,7 @@ export default class CustomerSocketChatServiceController {
 
       await notification.save();
 
-      const members = await NormalRooms.find().sort('-lastTime');
+      const members = await NormalRooms.find({ room: room }).sort('-lastTime');
 
       socket.emit('normal-new-user', members);
     }
@@ -76,7 +76,7 @@ export default class CustomerSocketChatServiceController {
 
       const members = await NormalRooms.find().sort('-lastTime');
 
-      socket.emit('normal-new-user', members);
+      socket.emit('normal-new-users', members);
     }
 
     let roomMessages = await getLastMessagesFromNormalRoom(room);
@@ -135,9 +135,13 @@ export default class CustomerSocketChatServiceController {
 
         await notification.save();
 
-        const members = await NormalRooms.find().sort('-lastTime');
+        const members = await NormalRooms.find({ room: room }).sort(
+          '-lastTime'
+        );
+        const members_admin = await NormalRooms.find().sort('-lastTime');
 
         socketIO.to(room).emit('normal-new-user', members);
+        socketIO.to(room).emit('normal-new-users', members_admin);
       } else {
         notification.client_notification = 1;
 
@@ -145,9 +149,13 @@ export default class CustomerSocketChatServiceController {
 
         await notification.save();
 
-        const members = await NormalRooms.find().sort('-lastTime');
+        const members = await NormalRooms.find({ room: room }).sort(
+          '-lastTime'
+        );
+        const members_admin = await NormalRooms.find().sort('-lastTime');
 
         socketIO.to(room).emit('normal-new-user', members);
+        socketIO.to(room).emit('normal-new-users', members_admin);
       }
     } catch (error) {
       console.log(error, 'seaoanf of work');
@@ -204,9 +212,13 @@ export default class CustomerSocketChatServiceController {
 
         await notification.save();
 
-        const members = await NormalRooms.find().sort('-lastTime');
+        const members = await NormalRooms.find({ room: room }).sort(
+          '-lastTime'
+        );
+        const members_admin = await NormalRooms.find().sort('-lastTime');
 
         socketIO.to(room).emit('normal-new-user', members);
+        socketIO.to(room).emit('normal-new-users', members_admin);
       } else {
         notification.notification = 1;
 
@@ -214,9 +226,13 @@ export default class CustomerSocketChatServiceController {
 
         await notification.save();
 
-        const members = await NormalRooms.find().sort('-lastTime');
+        const members = await NormalRooms.find({ room: room }).sort(
+          '-lastTime'
+        );
+        const members_admin = await NormalRooms.find().sort('-lastTime');
 
         socketIO.to(room).emit('normal-new-user', members);
+        socketIO.to(room).emit('normal-new-users', members_admin);
       }
     } catch (error) {
       console.log(error, 'sosj');

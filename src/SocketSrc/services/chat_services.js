@@ -51,7 +51,11 @@ export default class SocketChatServiceController {
 
       await notification.save();
 
-      const members = await Rooms.find().sort('-lastTime');
+      console.log(room?.split('-')[1], "room?.split('-')[1]");
+
+      const members = await Rooms.find({
+        room: { $regex: room?.split('-')[1], $options: 'i' },
+      }).sort('-lastTime');
 
       socket.emit('new-user', members);
     }
@@ -67,8 +71,6 @@ export default class SocketChatServiceController {
       socket.leave(previousRoom);
     }
 
-    console.log(room, 'room');
-
     socket.join(room);
 
     if (roomDetails?.notification > 0) {
@@ -82,7 +84,7 @@ export default class SocketChatServiceController {
 
       const members = await Rooms.find().sort('-lastTime');
 
-      socket.emit('new-user', members);
+      socket.emit('new-users', members);
     }
 
     let roomMessages = await getLastMessagesFromRoom(room);
@@ -147,9 +149,17 @@ export default class SocketChatServiceController {
 
       await admin_order.save();
 
-      const members = await Rooms.find().sort('-lastTime');
+      console.log(room, 'room');
+
+      console.log(room?.split('-')[1], room?.split('-')[1]);
+
+      const members = await Rooms.find({
+        room: { $regex: room?.split('-')[1], $options: 'i' },
+      }).sort('-lastTime');
+      const members_admin = await Rooms.find().sort('-lastTime');
 
       socketIO.to(room).emit('new-user', members);
+      socketIO.to(room).emit('new-users', members_admin);
     } else {
       notification.client_notification = 1;
 
@@ -161,9 +171,17 @@ export default class SocketChatServiceController {
 
       await admin_order.save();
 
-      const members = await Rooms.find().sort('-lastTime');
+      console.log(room, 'room');
+
+      console.log(room?.split('-')[1], room?.split('-')[1]);
+
+      const members = await Rooms.find({
+        room: { $regex: room?.split('-')[1], $options: 'i' },
+      }).sort('-lastTime');
+      const members_admin = await Rooms.find().sort('-lastTime');
 
       socketIO.to(room).emit('new-user', members);
+      socketIO.to(room).emit('new-users', members_admin);
     }
   }
 
@@ -236,9 +254,13 @@ export default class SocketChatServiceController {
 
       await client_order.save();
 
-      const members = await Rooms.find().sort('-lastTime');
+      const members = await Rooms.find({
+        room: { $regex: sender?._id, $options: 'i' },
+      }).sort('-lastTime');
+      const members_admin = await Rooms.find().sort('-lastTime');
 
       socketIO.to(room).emit('new-user', members);
+      socketIO.to(room).emit('new-users', members_admin);
     } else {
       notification.notification = 1;
 
@@ -250,9 +272,13 @@ export default class SocketChatServiceController {
 
       await client_order.save();
 
-      const members = await Rooms.find().sort('-lastTime');
+      const members = await Rooms.find({
+        room: { $regex: sender?._id, $options: 'i' },
+      }).sort('-lastTime');
+      const members_admin = await Rooms.find().sort('-lastTime');
 
       socketIO.to(room).emit('new-user', members);
+      socketIO.to(room).emit('new-users', members_admin);
     }
   }
 

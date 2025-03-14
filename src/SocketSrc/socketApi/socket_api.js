@@ -26,6 +26,7 @@ export const SocketApiProvider = (app) => {
 
   app.get('/api/v1/get_my_rooms', authenticateUser, async (req, res, next) => {
     try {
+      console.log(req.user.userId, 'noted');
       const rooms = await Rooms.find({
         room: { $regex: req.user.userId, $options: 'i' },
       }).sort('-lastTime');
