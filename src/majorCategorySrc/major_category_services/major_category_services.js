@@ -1,4 +1,4 @@
-import CatgoryModel from '../category_model/category_model.js';
+import MajorCatgoryModel from '../major_category_models/major_category_model.js';
 
 const options = {
   page: 1,
@@ -10,10 +10,10 @@ const options = {
   },
 };
 
-export default class CategoryController {
+export default class MajorCategoryController {
   async CreateCategory(payload) {
     try {
-      const category = await CatgoryModel.create({ ...payload });
+      const category = await MajorCatgoryModel.create({ ...payload });
 
       return category;
     } catch (err) {
@@ -23,7 +23,7 @@ export default class CategoryController {
 
   async SingleCategory(payload) {
     try {
-      const category = await CatgoryModel.findOne({
+      const category = await MajorCatgoryModel.findOne({
         _id: payload._id,
       });
 
@@ -35,7 +35,7 @@ export default class CategoryController {
 
   async getCategory(page, limit) {
     try {
-      const category = await CatgoryModel.paginate(
+      const category = await MajorCatgoryModel.paginate(
         {},
         { ...options, page: page, limit: limit }
       );
@@ -48,7 +48,7 @@ export default class CategoryController {
 
   async getAllMajorCategory() {
     try {
-      const category = await CatgoryModel.find();
+      const category = await MajorCatgoryModel.find();
 
       return category;
     } catch (err) {
@@ -58,7 +58,7 @@ export default class CategoryController {
 
   async EditCategory(payload, id) {
     try {
-      const category = await CatgoryModel.findOneAndUpdate(
+      const category = await MajorCatgoryModel.findOneAndUpdate(
         { _id: id },
         payload,
         {
@@ -75,7 +75,7 @@ export default class CategoryController {
 
   async deleteCategory(Id) {
     try {
-      const category = await CatgoryModel.findByIdAndDelete({
+      const category = await MajorCatgoryModel.findByIdAndDelete({
         _id: Id,
       });
 
@@ -87,7 +87,7 @@ export default class CategoryController {
 
   async SearchCategoryByName(name, page, limit) {
     try {
-      const searchCategory = await CatgoryModel.paginate(
+      const searchCategory = await MajorCatgoryModel.paginate(
         {
           name: { $regex: name, $options: 'i' },
         },

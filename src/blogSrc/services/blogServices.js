@@ -125,4 +125,19 @@ export default class BlogService {
       throw err;
     }
   }
+
+  async SearchBlogByTitle(title, page, limit) {
+    try {
+      const blog = await ArticlesModel.paginate(
+        {
+          title: { $regex: title, $options: 'i' },
+        },
+        { ...options, page: page, limit: limit }
+      );
+
+      return blog;
+    } catch (err) {
+      throw err;
+    }
+  }
 }

@@ -75,6 +75,8 @@ const OrderSchema = new mongoose.Schema(
       enum: ['unpaid', 'paid'],
       default: 'unpaid',
     },
+
+    date: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

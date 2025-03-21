@@ -54,13 +54,13 @@ export const ProductApiProvider = (app) => {
   );
 
   app.get(
-    '/api/v1/get_all_product/:page/:limit',
+    '/api/v1/get_all_product/:page/:limit/:sortBy',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
-        const { page, limit } = await req.params;
+        const { page, limit, sortBy } = await req.params;
 
-        const service = await productService.getProduct(page, limit);
+        const service = await productService.getProduct(page, limit, sortBy);
 
         // Return success response
         res.status(StatusCodes.OK).send({ message: 'success', data: service });
@@ -210,6 +210,28 @@ export const ProductApiProvider = (app) => {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: error.message });
+      }
+    }
+  );
+
+  app.get(
+    '/api/v1/search_for_product_by_title/:title/:page/:limit',
+    adminAuthenticateUser,
+    async (req, res, next) => {
+      try {
+        const { title, page, limit } = await req.params;
+
+        const product = await productService.SearchProductByTitle(
+          title,
+          page,
+          limit
+        );
+
+        res.status(StatusCodes.OK).json({ data: product, message: `success` });
+      } catch (err) {
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: err.message });
       }
     }
   );

@@ -1,44 +1,27 @@
 import { StatusCodes } from 'http-status-codes';
 import { adminAuthenticateUser } from '../../../utils/adminAuthentication.js';
-import CategoryController from '../category_services/category_services.js';
-import CatgoryModel from '../category_model/category_model.js';
-import SubCatgoryModel from '../category_model/sub_category_model.js';
+import ReviewController from '../review_services/review_services.js';
+import ReviewModel from '../review_models/review_models.js';
 
-export const CategoryApiProvider = (app) => {
-  const categoryServices = new CategoryController();
+export const ReviewApiProvider = (app) => {
+  const reviewServices = new ReviewController();
 
   // Registration API endpoint
   app.post(
-    '/api/v1/create_categroy',
+    '/api/v1/create_review',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const user = req.user;
 
-        console.log('joshua');
-
         // Check if required fields are provided
         if (!req.body.name) {
           return res.status(StatusCodes.BAD_REQUEST).send({
-            message: 'Please provide Category name',
+            message: 'Please provide name',
           });
         }
 
-        // Check if email or phone number already exists
-        const categoryName = await CatgoryModel.findOne({
-          name: req.body.name,
-        });
-
-        console.log(categoryName, 'finish the work');
-
-        if (categoryName) {
-          return res.status(StatusCodes.BAD_REQUEST).send({
-            message: 'Category with name already exist',
-          });
-        }
-
-        // Create user and generate OTP
-        const category = await categoryServices.CreateCategory({
+        const review = await reviewServices.createReview({
           ...req.body,
           adminEmail: user?.email,
           adminId: user?._id,
@@ -48,7 +31,7 @@ export const CategoryApiProvider = (app) => {
         // Return success response
         res
           .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: category });
+          .send({ message: 'success', data: review });
       } catch (err) {
         // Handle errors
         res
@@ -58,14 +41,12 @@ export const CategoryApiProvider = (app) => {
     }
   );
 
-  app.get('/api/v1/get_all_category/:page/:limit', async (req, res, next) => {
+  app.get('/api/v1/get_all_review/:page/:limit', async (req, res, next) => {
     try {
-      const service = await categoryServices.getCategory();
+      const review = await reviewServices.getReview();
 
       // Return success response
-      res
-        .status(StatusCodes.CREATED)
-        .send({ message: 'success', data: service });
+      res.status(StatusCodes.OK).send({ message: 'success', data: review });
     } catch (error) {
       res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -73,14 +54,12 @@ export const CategoryApiProvider = (app) => {
     }
   });
 
-  app.get('/api/v1/get_all_major_category', async (req, res, next) => {
+  app.get('/api/v1/get_all_major_review', async (req, res, next) => {
     try {
-      const service = await categoryServices.getAllMajorCategory();
+      const review = await reviewServices.getAllMajorReview();
 
       // Return success response
-      res
-        .status(StatusCodes.CREATED)
-        .send({ message: 'success', data: service });
+      res.status(StatusCodes.OK).send({ message: 'success', data: review });
     } catch (error) {
       res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -89,26 +68,24 @@ export const CategoryApiProvider = (app) => {
   });
 
   app.get(
-    '/api/v1/get_single_category/:Id',
+    '/api/v1/get_single_review/:Id',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const { Id } = await req.params;
 
-        const category = await categoryServices.SingleCategory({
+        const review = await reviewServices.SingleReview({
           _id: Id,
         });
 
-        if (!category) {
+        if (!review) {
           return res.status(StatusCodes.UNAUTHORIZED).send({
-            message: 'category is not available',
+            message: 'review is not available',
           });
         }
 
         // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: category });
+        res.status(StatusCodes.OK).send({ message: 'success', data: review });
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -118,34 +95,32 @@ export const CategoryApiProvider = (app) => {
   );
 
   app.patch(
-    '/api/v1/edit_category/:categoryId',
+    '/api/v1/edit_review/:reviewId',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const user = req.user;
 
-        const { categoryId } = req.params;
+        const { reviewId } = req.params;
 
-        // Check if email or phone number already exists
-        const category = await CatgoryModel.findOne({
-          _id: categoryId,
+        const review = await ReviewModel.findOne({
+          _id: reviewId,
         });
 
-        if (!category) {
+        if (!review) {
           return res.status(StatusCodes.UNAUTHORIZED).send({
-            message: 'category does not exists',
+            message: 'review does not exists',
           });
         }
 
-        // Create user and generate OTP
-        const categroy_state = await categoryServices.EditCategory(
+        const review_state = await reviewServices.EditReview(
           { ...req.body, editedAdminEmail: user?.email },
-          categoryId
+          reviewId
         );
 
         res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: categroy_state });
+          .status(StatusCodes.OK)
+          .send({ message: 'success', data: review_state });
       } catch (error) {
         // Handle errors
         res
@@ -156,24 +131,23 @@ export const CategoryApiProvider = (app) => {
   );
 
   app.post(
-    '/api/v1/delete_category',
+    '/api/v1/delete_review',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
-        const categoryId = req.body.id;
+        const reviewId = req.body.id;
 
-        // Check if email or phone number already exists
-        const category = await CatgoryModel.findOne({
-          _id: categoryId,
+        const review = await ReviewModel.findOne({
+          _id: reviewId,
         });
 
-        if (!category) {
+        if (!review) {
           return res.status(StatusCodes.UNAUTHORIZED).send({
-            message: 'category does not exists',
+            message: 'review does not exists',
           });
         }
 
-        const editedDetials = await categoryServices.deleteCategory(categoryId);
+        const editedDetials = await reviewServices.deleteReview(reviewId);
 
         res
           .status(StatusCodes.OK)
@@ -187,19 +161,19 @@ export const CategoryApiProvider = (app) => {
   );
 
   app.get(
-    '/api/v1/search_for_category_by_name/:name/:page/:limit',
+    '/api/v1/search_for_review_by_name/:name/:page/:limit',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const { name, page, limit } = await req.params;
 
-        const category = await categoryServices.SearchCategoryByName(
+        const review = await reviewServices.SearchReviewByName(
           name,
           page,
           limit
         );
 
-        res.status(StatusCodes.OK).json({ data: category, message: `success` });
+        res.status(StatusCodes.OK).json({ data: review, message: `success` });
       } catch (err) {
         return res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)

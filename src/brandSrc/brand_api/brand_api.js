@@ -1,44 +1,37 @@
 import { StatusCodes } from 'http-status-codes';
 import { adminAuthenticateUser } from '../../../utils/adminAuthentication.js';
-import CategoryController from '../category_services/category_services.js';
-import CatgoryModel from '../category_model/category_model.js';
-import SubCatgoryModel from '../category_model/sub_category_model.js';
+import BrandController from '../brand_services/brand_services.js';
+import BrandModel from '../brand_model/brand_model.js';
 
-export const CategoryApiProvider = (app) => {
-  const categoryServices = new CategoryController();
+export const BrandApiProvider = (app) => {
+  const brandServices = new BrandController();
 
   // Registration API endpoint
   app.post(
-    '/api/v1/create_categroy',
+    '/api/v1/create_brand',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const user = req.user;
 
-        console.log('joshua');
-
         // Check if required fields are provided
         if (!req.body.name) {
           return res.status(StatusCodes.BAD_REQUEST).send({
-            message: 'Please provide Category name',
+            message: 'Please provide Brand name',
           });
         }
 
-        // Check if email or phone number already exists
-        const categoryName = await CatgoryModel.findOne({
+        const brandName = await BrandModel.findOne({
           name: req.body.name,
         });
 
-        console.log(categoryName, 'finish the work');
-
-        if (categoryName) {
+        if (brandName) {
           return res.status(StatusCodes.BAD_REQUEST).send({
-            message: 'Category with name already exist',
+            message: 'Brand with name already exist',
           });
         }
 
-        // Create user and generate OTP
-        const category = await categoryServices.CreateCategory({
+        const brand = await brandServices.BrandCategory({
           ...req.body,
           adminEmail: user?.email,
           adminId: user?._id,
@@ -48,7 +41,7 @@ export const CategoryApiProvider = (app) => {
         // Return success response
         res
           .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: category });
+          .send({ message: 'success', data: brand });
       } catch (err) {
         // Handle errors
         res
@@ -58,14 +51,12 @@ export const CategoryApiProvider = (app) => {
     }
   );
 
-  app.get('/api/v1/get_all_category/:page/:limit', async (req, res, next) => {
+  app.get('/api/v1/get_all_brand/:page/:limit', async (req, res, next) => {
     try {
-      const service = await categoryServices.getCategory();
+      const brand = await brandServices.getBrand();
 
       // Return success response
-      res
-        .status(StatusCodes.CREATED)
-        .send({ message: 'success', data: service });
+      res.status(StatusCodes.OK).send({ message: 'success', data: brand });
     } catch (error) {
       res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -73,14 +64,12 @@ export const CategoryApiProvider = (app) => {
     }
   });
 
-  app.get('/api/v1/get_all_major_category', async (req, res, next) => {
+  app.get('/api/v1/get_all_major_brand', async (req, res, next) => {
     try {
-      const service = await categoryServices.getAllMajorCategory();
+      const brand = await brandServices.getAllMajorBrand();
 
       // Return success response
-      res
-        .status(StatusCodes.CREATED)
-        .send({ message: 'success', data: service });
+      res.status(StatusCodes.OK).send({ message: 'success', data: brand });
     } catch (error) {
       res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -89,26 +78,24 @@ export const CategoryApiProvider = (app) => {
   });
 
   app.get(
-    '/api/v1/get_single_category/:Id',
+    '/api/v1/get_single_brand/:Id',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const { Id } = await req.params;
 
-        const category = await categoryServices.SingleCategory({
+        const brand = await brandServices.SingleBrand({
           _id: Id,
         });
 
-        if (!category) {
+        if (!brand) {
           return res.status(StatusCodes.UNAUTHORIZED).send({
-            message: 'category is not available',
+            message: 'brand is not available',
           });
         }
 
         // Return success response
-        res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: category });
+        res.status(StatusCodes.OK).send({ message: 'success', data: brand });
       } catch (error) {
         res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -118,34 +105,32 @@ export const CategoryApiProvider = (app) => {
   );
 
   app.patch(
-    '/api/v1/edit_category/:categoryId',
+    '/api/v1/edit_brand/:brandId',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const user = req.user;
 
-        const { categoryId } = req.params;
+        const { brandId } = req.params;
 
-        // Check if email or phone number already exists
-        const category = await CatgoryModel.findOne({
-          _id: categoryId,
+        const brand = await BrandModel.findOne({
+          _id: brandId,
         });
 
-        if (!category) {
+        if (!brand) {
           return res.status(StatusCodes.UNAUTHORIZED).send({
-            message: 'category does not exists',
+            message: 'brand does not exists',
           });
         }
 
-        // Create user and generate OTP
-        const categroy_state = await categoryServices.EditCategory(
+        const brand_state = await brandServices.EditBrand(
           { ...req.body, editedAdminEmail: user?.email },
-          categoryId
+          brandId
         );
 
         res
-          .status(StatusCodes.CREATED)
-          .send({ message: 'success', data: categroy_state });
+          .status(StatusCodes.OK)
+          .send({ message: 'success', data: brand_state });
       } catch (error) {
         // Handle errors
         res
@@ -156,24 +141,23 @@ export const CategoryApiProvider = (app) => {
   );
 
   app.post(
-    '/api/v1/delete_category',
+    '/api/v1/delete_brand',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
-        const categoryId = req.body.id;
+        const brandId = req.body.id;
 
-        // Check if email or phone number already exists
-        const category = await CatgoryModel.findOne({
-          _id: categoryId,
+        const brand = await BrandModel.findOne({
+          _id: brandId,
         });
 
-        if (!category) {
+        if (!brand) {
           return res.status(StatusCodes.UNAUTHORIZED).send({
-            message: 'category does not exists',
+            message: 'brand does not exists',
           });
         }
 
-        const editedDetials = await categoryServices.deleteCategory(categoryId);
+        const editedDetials = await brandServices.deleteBrand(brandId);
 
         res
           .status(StatusCodes.OK)
@@ -187,19 +171,15 @@ export const CategoryApiProvider = (app) => {
   );
 
   app.get(
-    '/api/v1/search_for_category_by_name/:name/:page/:limit',
+    '/api/v1/search_for_brand_by_name/:name/:page/:limit',
     adminAuthenticateUser,
     async (req, res, next) => {
       try {
         const { name, page, limit } = await req.params;
 
-        const category = await categoryServices.SearchCategoryByName(
-          name,
-          page,
-          limit
-        );
+        const brand = await brandServices.SearchBrandByName(name, page, limit);
 
-        res.status(StatusCodes.OK).json({ data: category, message: `success` });
+        res.status(StatusCodes.OK).json({ data: brand, message: `success` });
       } catch (err) {
         return res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)

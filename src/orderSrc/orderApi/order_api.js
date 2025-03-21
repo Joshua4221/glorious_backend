@@ -501,4 +501,22 @@ export const OrderApiProvider = (app) => {
       }
     }
   );
+
+  app.get(
+    '/api/v1/search_for_order_by_name/:name/:page/:limit',
+    adminAuthenticateUser,
+    async (req, res, next) => {
+      try {
+        const { name, page, limit } = await req.params;
+
+        const order = await orderService.SearchOrderByName(name, page, limit);
+
+        res.status(StatusCodes.OK).json({ data: order, message: `success` });
+      } catch (err) {
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: err.message });
+      }
+    }
+  );
 };

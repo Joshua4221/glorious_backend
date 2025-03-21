@@ -305,9 +305,13 @@ export default class SocketChatServiceController {
 
     await order.save();
 
-    const members = await Rooms.find().sort('-lastTime');
+    const members = await Rooms.find({
+      room: { $regex: room?.split('-')[1], $options: 'i' },
+    }).sort('-lastTime');
+    const members_admin = await Rooms.find().sort('-lastTime');
 
     socketIO.to(room).emit('new-user', members);
+    socketIO.to(room).emit('new-users', members_admin);
   }
 
   async UpdatePaymentState(status, room, socket) {
@@ -325,9 +329,13 @@ export default class SocketChatServiceController {
 
     await order.save();
 
-    const members = await Rooms.find().sort('-lastTime');
+    const members = await Rooms.find({
+      room: { $regex: room?.split('-')[1], $options: 'i' },
+    }).sort('-lastTime');
+    const members_admin = await Rooms.find().sort('-lastTime');
 
     socketIO.to(room).emit('new-user', members);
+    socketIO.to(room).emit('new-users', members_admin);
   }
 
   async Online(roomId, socket) {

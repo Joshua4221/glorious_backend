@@ -4,7 +4,7 @@ const options = {
   page: 1,
   limit: 2,
   lean: true,
-  select: '-password',
+  sort: '-createdAt',
   collation: {
     locale: 'en',
   },
@@ -264,6 +264,21 @@ export default class OrderController {
       });
 
       return order;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async SearchOrderByName(name, page, limit) {
+    try {
+      const searchOrder = await OrderModel.paginate(
+        {
+          name: { $regex: name, $options: 'i' },
+        },
+        { ...options, page: page, limit: limit }
+      );
+
+      return searchOrder;
     } catch (err) {
       throw err;
     }

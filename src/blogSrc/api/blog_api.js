@@ -185,4 +185,22 @@ export const blogApiConnections = (app) => {
         .json({ message: error.message });
     }
   });
+
+  app.get(
+    '/api/v1/search_for_blog_by_title/:title/:page/:limit',
+    adminAuthenticateUser,
+    async (req, res, next) => {
+      try {
+        const { title, page, limit } = await req.params;
+
+        const blog = await blogService.SearchBlogByTitle(title, page, limit);
+
+        res.status(StatusCodes.OK).json({ data: blog, message: `success` });
+      } catch (err) {
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: err.message });
+      }
+    }
+  );
 };

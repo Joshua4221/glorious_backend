@@ -4,7 +4,7 @@ const options = {
   page: 1,
   limit: 2,
   lean: true,
-  select: '-password',
+  sort: { date: -1 },
   collation: {
     locale: 'en',
   },
@@ -92,11 +92,27 @@ export default class ProductController {
     }
   }
 
-  async getProduct(page, limit) {
+  async getProduct(page, limit, sortBy) {
     try {
+      let sortOptions = {};
+
+      switch (sortBy) {
+        case 'date':
+          sortOptions = { date: -1 }; // Descending order by date
+          break;
+        case 'product_name_asc':
+          sortOptions = { product_name: 1 }; // Ascending order by product_name
+          break;
+        case 'product_name_desc':
+          sortOptions = { product_name: -1 }; // Descending order by product_name
+          break;
+        default:
+          sortOptions = { date: -1 }; // Default sorting by date (desc)
+      }
+
       const product = await ProductModel.paginate(
         {},
-        { ...options, page: page, limit: limit }
+        { ...options, page: page, limit: limit, sort: sortOptions }
       );
 
       return product;
@@ -152,6 +168,21 @@ export default class ProductController {
       const product = await ProductModel.find().countDocuments();
 
       return product;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async SearchProductByTitle(title, page, limit) {
+    try {
+      const searchproduct = await ProductModel.paginate(
+        {
+          product_name: { $regex: title, $options: 'i' },
+        },
+        { ...options, page: page, limit: limit }
+      );
+
+      return searchproduct;
     } catch (err) {
       throw err;
     }
