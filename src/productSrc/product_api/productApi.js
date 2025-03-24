@@ -154,6 +154,8 @@ export const ProductApiProvider = (app) => {
           productId
         );
 
+        console.log(product_state, 'joshua ejike');
+
         res
           .status(StatusCodes.OK)
           .send({ message: 'success', data: product_state });

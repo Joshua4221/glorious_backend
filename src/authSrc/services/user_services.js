@@ -6,6 +6,7 @@ const options = {
   limit: 2,
   lean: true,
   select: '-password',
+  sort: '-date',
   collation: {
     locale: 'en',
   },
@@ -88,6 +89,21 @@ export default class UserService {
       const user = await UserModel.find().countDocuments();
 
       return user;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async SearchUserData(payload, page, limit) {
+    try {
+      const searchUser = await UserModel.paginate(
+        {
+          name: { $regex: payload, $options: 'i' },
+        },
+        { ...options, page: page, limit: limit }
+      );
+
+      return searchUser;
     } catch (err) {
       throw err;
     }

@@ -54,6 +54,11 @@ const ProductSchema = new mongoose.Schema(
       required: [true, 'Please provide price'],
     },
 
+    colors: {
+      type: [String],
+      default: [],
+    },
+
     price: {
       type: String,
       required: [true, 'Please provide price'],

@@ -18,15 +18,19 @@ export const adminApiProvider = (app) => {
           });
         }
 
-        if (req?.user?.admintype === 'normal_admin') {
+        if (
+          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'order_admin'
+        ) {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Level you can not create a user.',
+            message: 'Becuase of your ADMIN Level you can not create a user.',
           });
         }
 
         if (req?.user?.status === 'inactive') {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Status you can not create a user.',
+            message: 'Becuase of your ADMIN Status you can not create a user.',
           });
         }
 
@@ -54,8 +58,6 @@ export const adminApiProvider = (app) => {
           adminName: req?.user?.name,
           adminEmail: req?.user?.email,
         });
-
-        console.log(user, 'lord');
 
         return res
           .status(StatusCodes.CREATED)

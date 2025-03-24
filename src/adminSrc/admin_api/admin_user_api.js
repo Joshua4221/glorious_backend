@@ -88,19 +88,23 @@ export const adminUserApiConnections = (app) => {
           req?.body?.adminType === 'root_admin'
         ) {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Level you can not edit this user',
+            message: 'Becuase of your ADMIN Level you can not edit this user',
           });
         }
 
-        if (req?.user?.adminType === 'normal_admin') {
+        if (
+          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'order_admin'
+        ) {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Level you can not edit this user',
+            message: 'Becuase of your ADMIN Level you can not edit this user',
           });
         }
 
         if (req?.user?.status === 'inactive') {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Status you can not create a user.',
+            message: 'Becuase of your ADMIN Status you can not create a user.',
           });
         }
 
@@ -113,8 +117,6 @@ export const adminUserApiConnections = (app) => {
             message: `This user Cans't be Edited`,
           });
         }
-
-        console.log(req.body, 'season of work');
 
         if (req.body.password) {
           const salt = await bcrypt.genSalt(10);
@@ -225,19 +227,23 @@ export const adminUserApiConnections = (app) => {
           req?.admintype === 'root_admin'
         ) {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Level you can not delete this user',
+            message: 'Becuase of your ADMIN Level you can not delete this user',
           });
         }
 
-        if (req?.user?.adminType === 'normal_admin') {
+        if (
+          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'order_admin'
+        ) {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Level you can not delete this user',
+            message: 'Becuase of your ADMIN Level you can not delete this user',
           });
         }
 
         if (req?.user?.status === 'inactive') {
           return res.status(StatusCodes.UNAUTHORIZED).json({
-            message: 'Becuase of you ADMIN Status you can not create a user.',
+            message: 'Becuase of your ADMIN Status you can not create a user.',
           });
         }
 
@@ -315,30 +321,6 @@ export const adminUserApiConnections = (app) => {
         return res
           .status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json({ message: error.message });
-      }
-    }
-  );
-
-  app.get(
-    '/api/v1/admin_search_for_user/:name/:limit',
-    adminAuthenticateUser,
-    async (req, res, next) => {
-      try {
-        const { name, limit } = await req.params;
-
-        const users = await adminUserService.SearchUserData(username, limit);
-
-        if (!users) {
-          return res
-            .status(StatusCodes.BAD_REQUEST)
-            .json({ message: `user does not exit` });
-        }
-
-        res.status(StatusCodes.OK).json({ data: users, message: `success` });
-      } catch (err) {
-        return res
-          .status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json({ message: err.message });
       }
     }
   );

@@ -34,6 +34,7 @@ import { BrandApiProvider } from './src/brandSrc/brand_api/brand_api.js';
 import { MacueApiProvider } from './src/macueSrc/macue_api/macue_api.js';
 import { ReviewApiProvider } from './src/reviewSrc/review_api/review_api.js';
 import { MajorCategoryApiProvider } from './src/majorCategorySrc/major_category_api/major_category_api.js';
+import { ReelApiProvider } from './src/reelSrc/reel_api/reel_api.js';
 
 export const expressApp = async (app) => {
   app.use(express.json({ limit: '50mb' }));
@@ -78,6 +79,7 @@ export const expressApp = async (app) => {
   MacueApiProvider(app);
   ReviewApiProvider(app);
   MajorCategoryApiProvider(app);
+  ReelApiProvider(app);
 
   app.use(notFound);
 

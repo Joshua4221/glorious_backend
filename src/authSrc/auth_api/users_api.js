@@ -214,4 +214,29 @@ export const userApiProvider = (app) => {
         .json({ message: err.message });
     }
   });
+
+  app.get(
+    '/api/v1/user_search_for_user/:name/:page/:limit',
+    async (req, res, next) => {
+      try {
+        const { name, page, limit } = await req.params;
+
+        console.log(name, page, limit, 'ame, page, limit');
+
+        const users = await userService.SearchUserData(name, page, limit);
+
+        if (!users) {
+          return res
+            .status(StatusCodes.BAD_REQUEST)
+            .json({ message: `user does not exit` });
+        }
+
+        res.status(StatusCodes.OK).json({ data: users, message: `success` });
+      } catch (err) {
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: err.message });
+      }
+    }
+  );
 };

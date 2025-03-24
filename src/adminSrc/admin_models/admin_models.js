@@ -47,7 +47,14 @@ const AdminSchema = new mongoose.Schema(
 
     adminType: {
       type: String,
-      enum: ['root_admin', 'mid_admin', 'normal_admin'],
+      enum: [
+        'root_admin',
+        'mid_admin',
+        'order_admin',
+        'product_admin',
+        'normal_two_admin',
+        'normal_one_admin',
+      ],
       default: 'normal_admin',
     },
 

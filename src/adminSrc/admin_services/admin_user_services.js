@@ -1,5 +1,16 @@
 import AdminModel from '../admin_models/admin_models.js';
 
+const options = {
+  page: 1,
+  limit: 2,
+  lean: true,
+  select: '-password',
+  sort: '-date',
+  collation: {
+    locale: 'en',
+  },
+};
+
 export default class AdminUserService {
   async getUserData(payload) {
     try {
@@ -24,18 +35,6 @@ export default class AdminUserService {
       ).select('-password');
 
       return createUser;
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  async SearchUserData(payload, limit) {
-    try {
-      const searchUser = await AdminModel.find({
-        name: { $regex: payload, $options: 'i' },
-      }).limit(Number(limit));
-
-      return searchUser;
     } catch (err) {
       throw err;
     }

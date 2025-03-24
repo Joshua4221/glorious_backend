@@ -181,4 +181,26 @@ export const UserProductApiProvider = (app) => {
       }
     }
   );
+
+  app.get(
+    '/api/v1/user_search_for_product_by_title/:title/:page/:limit',
+    authenticateUser,
+    async (req, res, next) => {
+      try {
+        const { title, page, limit } = await req.params;
+
+        const product = await productService.SearchProductByTitle(
+          title,
+          page,
+          limit
+        );
+
+        res.status(StatusCodes.OK).json({ data: product, message: `success` });
+      } catch (err) {
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: err.message });
+      }
+    }
+  );
 };
