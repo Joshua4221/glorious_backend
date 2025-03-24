@@ -55,8 +55,6 @@ export const ReelApiProvider = (app) => {
     try {
       const { page, limit } = req.params;
 
-      console.log(page, limit, 'versions');
-
       const reels = await reelServices.getReel(page, limit);
 
       // Return success response

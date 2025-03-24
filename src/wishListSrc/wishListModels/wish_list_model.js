@@ -15,6 +15,7 @@ const ProductSchema = new mongoose.Schema({
   product_name: {
     type: String,
   },
+  color: { type: String },
   price: { type: String, required: true },
   symbol: { type: String },
   gallery: [GallerySchema],

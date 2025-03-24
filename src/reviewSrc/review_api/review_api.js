@@ -43,7 +43,9 @@ export const ReviewApiProvider = (app) => {
 
   app.get('/api/v1/get_all_review/:page/:limit', async (req, res, next) => {
     try {
-      const review = await reviewServices.getReview();
+      let { page, limit } = req.params;
+
+      const review = await reviewServices.getReview(page, limit);
 
       // Return success response
       res.status(StatusCodes.OK).send({ message: 'success', data: review });

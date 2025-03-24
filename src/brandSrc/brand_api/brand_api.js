@@ -53,7 +53,9 @@ export const BrandApiProvider = (app) => {
 
   app.get('/api/v1/get_all_brand/:page/:limit', async (req, res, next) => {
     try {
-      const brand = await brandServices.getBrand();
+      const { page, limit } = req.params;
+
+      const brand = await brandServices.getBrand(page, limit);
 
       // Return success response
       res.status(StatusCodes.OK).send({ message: 'success', data: brand });

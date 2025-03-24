@@ -15,7 +15,9 @@ export const CartApiProvider = (app) => {
     try {
       const user = req.user;
 
-      const { productId, quantity } = req.body;
+      const { productId, quantity, color } = req.body;
+
+      console.log(productId, quantity, color, 'color');
 
       // Check if required fields are provided
       if (!productId) {
@@ -59,6 +61,7 @@ export const CartApiProvider = (app) => {
                   ? Number(productDetails.discount)
                   : Number(productDetails.price),
               gallery: productDetails?.gallery,
+              color: color,
               totalPrice:
                 Number(productDetails.price) > Number(productDetails.discount)
                   ? Number(productDetails.discount)
@@ -105,6 +108,7 @@ export const CartApiProvider = (app) => {
               ? Number(productDetails.discount)
               : Number(productDetails.price)),
           gallery: productDetails?.gallery,
+          color: color,
           symbol: productDetails?.symbol,
         });
 

@@ -18,6 +18,7 @@ const ProductSchema = new mongoose.Schema({
   product_name: {
     type: String,
   },
+  color: { type: String },
   quantity: { type: Number, min: 1 },
   price: { type: String },
   totalPrice: { type: String, default: 0 },

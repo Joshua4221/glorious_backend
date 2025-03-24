@@ -67,7 +67,9 @@ export const MajorCategoryApiProvider = (app) => {
     '/api/v1/get_all_major_category/:page/:limit',
     async (req, res, next) => {
       try {
-        const service = await categoryServices.getCategory();
+        const { page, limit } = req.params;
+
+        const service = await categoryServices.getCategory(page, limit);
 
         // Return success response
         res.status(StatusCodes.OK).send({ message: 'success', data: service });

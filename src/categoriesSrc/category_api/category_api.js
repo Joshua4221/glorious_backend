@@ -60,7 +60,9 @@ export const CategoryApiProvider = (app) => {
 
   app.get('/api/v1/get_all_category/:page/:limit', async (req, res, next) => {
     try {
-      const service = await categoryServices.getCategory();
+      const { page, limit } = req.params;
+
+      const service = await categoryServices.getCategory(page, limit);
 
       // Return success response
       res

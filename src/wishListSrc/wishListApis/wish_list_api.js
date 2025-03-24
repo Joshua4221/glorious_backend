@@ -14,7 +14,7 @@ export const WishListApiProvider = (app) => {
       try {
         const user = req.user;
 
-        const { productId, quantity } = req.body;
+        const { productId, quantity, color } = req.body;
 
         // Check if required fields are provided
         if (!productId) {
@@ -58,6 +58,7 @@ export const WishListApiProvider = (app) => {
                     ? Number(productDetails.discount)
                     : Number(productDetails.price),
                 gallery: productDetails?.gallery,
+                color: color,
                 symbol: productDetails?.symbol,
               },
             ],
@@ -84,6 +85,7 @@ export const WishListApiProvider = (app) => {
                 : Number(productDetails.price),
 
             gallery: productDetails?.gallery,
+            color: color,
             symbol: productDetails?.symbol,
           });
 

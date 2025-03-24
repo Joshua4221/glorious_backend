@@ -53,7 +53,9 @@ export const MacueApiProvider = (app) => {
 
   app.get('/api/v1/get_all_macue/:page/:limit', async (req, res, next) => {
     try {
-      const macue = await macueServices.getMacue();
+      const { page, limit } = req.params;
+
+      const macue = await macueServices.getMacue(page, limit);
 
       // Return success response
       res.status(StatusCodes.OK).send({ message: 'success', data: macue });

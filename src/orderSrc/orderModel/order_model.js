@@ -15,6 +15,7 @@ const ProductSchema = new mongoose.Schema({
   product_name: {
     type: String,
   },
+  color: { type: String },
   quantity: { type: Number, required: true, min: 1 },
   price: { type: String, required: true },
   totalPrice: { type: String, default: 0 },
