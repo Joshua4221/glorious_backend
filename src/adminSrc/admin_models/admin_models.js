@@ -92,14 +92,6 @@ const AdminSchema = new mongoose.Schema(
     usedroom: {
       type: String,
     },
-
-    adminEmail: {
-      type: String,
-    },
-
-    adminName: {
-      type: String,
-    },
   },
   { timestamps: true }
 );

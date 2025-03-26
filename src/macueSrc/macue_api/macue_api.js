@@ -149,7 +149,7 @@ export const MacueApiProvider = (app) => {
       try {
         const macueId = req.body.id;
 
-        const macue = await BrandModel.findOne({
+        const macue = await MacueModel.findOne({
           _id: macueId,
         });
 
@@ -159,7 +159,7 @@ export const MacueApiProvider = (app) => {
           });
         }
 
-        const editedDetials = await macueServices.deleteMacue(brandId);
+        const editedDetials = await macueServices.deleteMacue(macueId);
 
         res
           .status(StatusCodes.OK)
