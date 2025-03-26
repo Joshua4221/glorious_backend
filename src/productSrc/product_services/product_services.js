@@ -24,6 +24,7 @@ export default class ProductController {
   async SearchProductByCategory(
     name,
     payload,
+    brand,
     minPrice,
     maxPrice,
     page,
@@ -35,6 +36,11 @@ export default class ProductController {
       // If category is provided, add it to the query
       if (payload !== '' && payload) {
         query.category = { $regex: payload, $options: 'i' };
+      }
+
+      // If category is provided, add it to the query
+      if (brand !== '' && brand) {
+        query.brand = { $regex: brand, $options: 'i' };
       }
 
       // If category is provided, add it to the query

@@ -121,18 +121,20 @@ export const UserProductApiProvider = (app) => {
   );
 
   app.get(
-    '/api/v1/search_for_product_by_category/:name/:category/:from/:to/:page/:limit',
+    '/api/v1/search_for_product_by_category/:name/:category/:brand/:from/:to/:page/:limit',
     async (req, res, next) => {
       try {
-        let { name, category, from, to, page, limit } = await req.params;
+        let { name, category, brand, from, to, page, limit } = await req.params;
 
         // Normalize empty string parameters
         if (name === '""' || name === "''" || !name) name = '';
         if (category === '""' || category === "''" || !category) category = '';
+        if (brand === '""' || brand === "''" || !brand) brand = '';
 
         const product = await productService.SearchProductByCategory(
           name,
           category,
+          brand,
           Number(from),
           Number(to),
           page,
