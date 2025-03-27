@@ -140,6 +140,19 @@ export default class ProductController {
     }
   }
 
+  async getNewProduct(page, limit) {
+    try {
+      const product = await ProductModel.paginate(
+        { tags: 'New Arrival' },
+        { ...options, page: page, limit: limit }
+      );
+
+      return product;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async EditProduct(payload, id) {
     try {
       const product = await ProductModel.findOneAndUpdate(
