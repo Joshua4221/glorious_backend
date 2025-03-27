@@ -146,7 +146,7 @@ export const CartApiProvider = (app) => {
     }
   });
 
-  app.get('/api/v1/get_all_cart', async (req, res, next) => {
+  app.get('/api/v1/get_all_cart', authenticateUser, async (req, res, next) => {
     try {
       const { userId } = req.user;
 

@@ -126,20 +126,24 @@ export const WishListApiProvider = (app) => {
     }
   );
 
-  app.get('/api/v1/get_all_wish_list', async (req, res, next) => {
-    try {
-      const { userId } = req.user;
+  app.get(
+    '/api/v1/get_all_wish_list',
+    authenticateUser,
+    async (req, res, next) => {
+      try {
+        const { userId } = req.user;
 
-      const wishlist = await wishlistService.getWishList(userId);
+        const wishlist = await wishlistService.getWishList(userId);
 
-      // Return success response
-      res.status(StatusCodes.OK).send({ message: 'success', data: wishlist });
-    } catch (error) {
-      res
-        .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .json({ message: error.message });
+        // Return success response
+        res.status(StatusCodes.OK).send({ message: 'success', data: wishlist });
+      } catch (error) {
+        res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({ message: error.message });
+      }
     }
-  });
+  );
 
   app.get(
     '/api/v1/get_single_wish_list/:Id',
