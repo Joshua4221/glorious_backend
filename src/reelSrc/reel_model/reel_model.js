@@ -21,6 +21,12 @@ const ReelSchema = new mongoose.Schema(
       type: String,
     },
 
+    reelsType: {
+      type: String,
+      enum: ['instagram', 'tiktok', 'pinterest', 'facebook'],
+      default: 'instagram',
+    },
+
     date: { type: Date, default: Date.now },
 
     editedAdminEmail: {
