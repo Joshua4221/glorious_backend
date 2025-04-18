@@ -14,7 +14,7 @@ const io = createSocketServer(server);
 
 const StartServer = async () => {
   const { PORT } = configs;
-  const port = '4300';
+  const port = '7700';
 
   dotenv.config();
 
@@ -35,3 +35,9 @@ const StartServer = async () => {
 StartServer();
 
 export const socketIO = io;
+
+// My own
+// MONGODB_URI=mongodb+srv://Godfirst:joshua1212@nodeexpressproject.b2bha.mongodb.net/Glorious_Evidence?retryWrites=true&w=majority
+
+// glrious
+// MONGODB_URI=mongodb+srv://gloriousevidenceltd:Glorious1212@cluster0.luyw9yr.mongodb.net/Glorious_Evidence?retryWrites=true&w=majority

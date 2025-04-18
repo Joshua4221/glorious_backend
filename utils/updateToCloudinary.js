@@ -5,7 +5,7 @@ import UserModel from '../src/authSrc/models/user.js';
 export const UploadThroughCloudinary = async (pic) => {
   try {
     const result = await cloudinary.uploader.upload(pic, {
-      folder: 'airdrop_punch',
+      folder: 'glorious_evidence',
       resource_type: 'auto',
       raw_convert: 'aspose',
     });

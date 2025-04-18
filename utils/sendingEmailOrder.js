@@ -32,7 +32,9 @@ export const sendOrderEmail = async (orderDetails) => {
     });
 
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.zoho.com',
+      secure: true,
+      port: 465,
       auth: {
         user: USER_EMAIL,
         pass: APP_PASSWORD,
@@ -40,7 +42,7 @@ export const sendOrderEmail = async (orderDetails) => {
     });
 
     const mailOptions = {
-      from: `Glorious Evidence <${USER_EMAIL}>`,
+      from: `"Glorious Evidence Info" <${USER_EMAIL}>`,
       to: orderDetails.email,
       subject: 'Order Status Update',
       html,

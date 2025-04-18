@@ -6,8 +6,9 @@ const { APP_PASSWORD, USER_EMAIL } = configs;
 export const sendEmail = async (email, subject, text) => {
   try {
     const transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      host: 'smtp.zoho.com',
       secure: true,
+      port: 465,
       auth: {
         user: USER_EMAIL,
         pass: APP_PASSWORD,
@@ -15,7 +16,7 @@ export const sendEmail = async (email, subject, text) => {
     });
 
     const sentMailResponse = await transporter.sendMail({
-      from: '<Joshua>',
+      from: `"Glorious Evidence Info" <${USER_EMAIL}>`,
       to: email,
       subject: subject,
       html: text,

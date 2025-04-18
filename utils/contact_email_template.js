@@ -6,7 +6,7 @@ const { APP_PASSWORD, USER_EMAIL } = configs;
 export const sendContactEmail = async (email, name, subject, message) => {
   try {
     const transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      host: 'smtp.zoho.com',
       secure: true,
       auth: {
         user: USER_EMAIL,
