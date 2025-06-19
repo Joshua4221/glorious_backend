@@ -93,8 +93,8 @@ export const adminUserApiConnections = (app) => {
         }
 
         if (
-          req?.user?.admintype === 'normal_two_admin' ||
-          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'normal_admin' ||
+          req?.user?.admintype === 'product_admin' ||
           req?.user?.admintype === 'order_admin'
         ) {
           return res.status(StatusCodes.UNAUTHORIZED).json({
@@ -232,8 +232,8 @@ export const adminUserApiConnections = (app) => {
         }
 
         if (
-          req?.user?.admintype === 'normal_two_admin' ||
-          req?.user?.admintype === 'normal_two_admin' ||
+          req?.user?.admintype === 'normal_admin' ||
+          req?.user?.admintype === 'product_admin' ||
           req?.user?.admintype === 'order_admin'
         ) {
           return res.status(StatusCodes.UNAUTHORIZED).json({

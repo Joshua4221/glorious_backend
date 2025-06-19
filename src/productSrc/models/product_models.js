@@ -41,7 +41,7 @@ const ProductSchema = new mongoose.Schema(
 
     brand: {
       type: String,
-      required: [true, 'Please provide sub_category'],
+      required: [true, 'Please provide brand'],
     },
 
     currency: {
